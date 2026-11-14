@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use ArpPhpTest\Application;
+
+$command = $argv[1] ?? 'help';
+if ($command === 'help') {
+    echo "Commands: app:init, modules:list, modules:install ID, modules:enable ID, modules:disable ID, modules:diagnose\n";
+    exit(0);
+}
+try {
+    $manager = Application::modules();
+    $id = $argv[2] ?? null;
+    switch ($command) {
+        case 'app:init':
+            echo "Module registry initialized\n";
+            break;
+        case 'modules:list':
+            foreach ($manager->list() as $row) {
+                printf("%-20s %-12s %s\n", $row['id'], $row['version'], $row['state']);
+            }
+            break;
+        case 'modules:install':
+        case 'modules:enable':
+        case 'modules:disable':
+            if (!is_string($id) || $id === '') throw new InvalidArgumentException("Missing module id");
+            $method = substr($command, strlen('modules:'));
+            $manager->$method($id);
+            echo "{$command}: {$id} OK\n";
+            break;
+        case 'modules:diagnose':
+            echo json_encode(['loadOrder' => $manager->loadOrder(), 'capabilities' => $manager->boot()], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n";
+            break;
+        default:
+            throw new InvalidArgumentException("Unknown command: {$command}");
+    }
+} catch (Throwable $error) {
+    fwrite(STDERR, "ERROR: {$error->getMessage()}\n");
+    exit(1);
+}

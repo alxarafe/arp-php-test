@@ -1,0 +1,30 @@
+{
+  "name": "alxarafe/arp-php-test",
+  "description": "PHP 8.5 modular integration test application for ARP",
+  "type": "project",
+  "license": "Apache-2.0",
+  "require": {
+    "php": "^8.5",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "symfony/yaml": "^8.0",
+    "symfony/dotenv": "^8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.5"
+  },
+  "autoload": {
+    "psr-4": { "ArpPhpTest\\": "src/" }
+  },
+  "autoload-dev": {
+    "psr-4": { "ArpPhpTest\\Tests\\": "tests/" }
+  },
+  "scripts": {
+    "test": "phpunit --testsuite unit",
+    "test:integration": "phpunit --testsuite integration"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {}
+  }
+}
