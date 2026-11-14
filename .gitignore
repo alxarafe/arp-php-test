@@ -4,3 +4,6 @@
 /.phpunit.result.cache
 /.idea/
 /.vscode/
+
+# OpenIDEA
+.openidea/
